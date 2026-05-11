@@ -6,7 +6,18 @@ $clientSecret = 'hddQpiSISFTstFFjEYxlfCWvNdvlfUXa';
 $redirectUri = 'https://my-tiktok-auth.vercel.app/'; 
 
 $api = new \JanStolpe\TikTokApi\TikTokApi($clientKey, $clientSecret, $redirectUri);
-
+?>
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AWR TikTok Authentication</title>
+    <!-- Vercel Web Analytics -->
+    <script defer src="https://cdn.vercel-insights.com/v1/script.js"></script>
+</head>
+<body>
+<?php
 if (isset($_GET['code'])) {
     try {
         $token = $api->getAccessToken($_GET['code']);
@@ -23,3 +34,6 @@ if (isset($_GET['code'])) {
           <a href="' . $url . '" style="padding:15px 30px; background:#000; color:#fff; text-decoration:none; border-radius:5px;">تسجيل الدخول عبر TikTok</a>
           </div>';
 }
+?>
+</body>
+</html>
