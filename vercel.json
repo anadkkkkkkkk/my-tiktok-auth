@@ -1,12 +1,9 @@
 {
   "version": 2,
-  "functions": {
-    "api/*.php": { "runtime": "vercel-php@0.7.2" }
-  },
-  "routes": [
-    { "src": "/privacy", "dest": "/privacy.html" },
-    { "src": "/terms", "dest": "/terms.html" },
-    { "src": "/tiktok-verify.txt", "dest": "/tiktok-verify.txt" },
-    { "src": "/(.*)", "dest": "/api/index.php" }
+  "cleanUrls": true,
+  "rewrites": [
+    { "source": "/", "destination": "/index.html" },
+    { "source": "/privacy", "destination": "/privacy.html" },
+    { "source": "/terms", "destination": "/terms.html" }
   ]
 }
