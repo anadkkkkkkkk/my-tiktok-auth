@@ -3,19 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AWR Crow</title>
+    <title>AWR Crow - Sandbox</title>
     <style>
         body { background-color: #121212; color: white; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; font-family: sans-serif; }
         .card { background: #1e1e1e; padding: 40px; border-radius: 15px; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.5); width: 80%; max-width: 400px; }
-        .btn { background: #fe2c55; color: white; border: none; padding: 15px 20px; border-radius: 8px; font-weight: bold; cursor: pointer; text-decoration: none; display: block; margin-top: 25px; transition: 0.3s; }
-        .btn:hover { background: #e0244a; }
+        .btn { background: #fe2c55; color: white; border: none; padding: 15px 20px; border-radius: 8px; font-weight: bold; cursor: pointer; text-decoration: none; display: block; margin-top: 25px; }
     </style>
 </head>
 <body>
     <div class="card">
         <h2 style="color: #fe2c55;">AWR Crow</h2>
-        <p>اضغط للبدء في ربط حسابك</p>
-        <a href="https://www.tiktok.com/v2/auth/authorize/?client_key=awnp8zrsr8je0ukh&scope=user.info.basic&response_type=code&redirect_uri=https://my-tiktok-auth.vercel.app/api/callback.php&state=awr" class="btn">Login with TikTok</a>
+        <p style="color: #aaa;">(Sandbox Mode)</p>
+        <a href="https://www.tiktok.com/v2/auth/authorize/?client_key=${SANDBOX_KEY}&scope=user.info.basic&response_type=code&redirect_uri=https://my-tiktok-auth.vercel.app/api/callback.php&state=awr" class="btn">Login with TikTok</a>
     </div>
 </body>
 </html>
