@@ -1,13 +1,11 @@
 {
   "version": 2,
   "cleanUrls": true,
+  "trailingSlash": false,
   "routes": [
-    {
-      "src": "/(.*)",
-      "dest": "/index.html",
-      "headers": {
-        "Content-Type": "text/html; charset=UTF-8"
-      }
-    }
+    { "src": "/tiktok-verify.txt", "dest": "/tiktok-verify.txt" },
+    { "src": "/privacy", "dest": "/privacy.html" },
+    { "src": "/terms", "dest": "/terms.html" },
+    { "src": "/(.*)", "dest": "/index.html" }
   ]
 }
