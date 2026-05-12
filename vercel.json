@@ -5,6 +5,10 @@
     }
   },
   "routes": [
-    { "src": "/(.*)", "dest": "/api/index.php" }
+    {
+      "src": "/(.*)",
+      "dest": "/api/index.php",
+      "headers": { "Content-Type": "text/html" }
+    }
   ]
 }
