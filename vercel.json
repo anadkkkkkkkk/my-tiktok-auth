@@ -1,14 +1,8 @@
 {
-  "functions": {
-    "api/index.php": {
-      "runtime": "vercel-php@0.7.2"
-    }
-  },
+  "functions": { "api/*.php": { "runtime": "vercel-php@0.7.2" } },
   "routes": [
-    {
-      "src": "/(.*)",
-      "dest": "/api/index.php",
-      "headers": { "Content-Type": "text/html" }
-    }
+    { "src": "/privacy(/?)", "dest": "/api/privacy.php" },
+    { "src": "/terms(/?)", "dest": "/api/terms.php" },
+    { "src": "/(.*)", "dest": "/api/index.php" }
   ]
 }
