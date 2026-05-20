@@ -1,21 +1,17 @@
-const { Bot, GrammyError, HttpError } = require("grammy");
-const { exec } = require("child_process");
-const fs = require("fs");
-
+const { Bot } = require("grammy");
+const { execSync } = require("child_process");
 const bot = new Bot(process.env.TELEGRAM_TOKEN);
 
+// معالجة الملفات الصوتية مباشرة
 bot.on("message:audio", async (ctx) => {
+  ctx.reply("🎚️ جارٍ معالجة الصوت وإضافة الصدى...");
   const file = await ctx.getFile();
-  const path = `./input.mp3`;
-  await file.download(path);
+  await file.download("./input.mp3");
 
-  ctx.reply("🎚️ جاري إضافة الصدى... لحظات.");
+  // إضافة صدى احترافي
+  execSync('ffmpeg -i input.mp3 -af "aecho=0.8:0.9:500:0.4" output.mp3');
   
-  // إضافة الصدى
-  exec(`ffmpeg -i input.mp3 -af "aecho=0.8:0.9:500:0.4" output.mp3`, (err) => {
-    if (err) return ctx.reply("❌ فشلت المعالجة.");
-    ctx.replyWithAudio("./output.mp3", { caption: "✅ هذا هو الصوت مع الصدى جاهز!" });
-  });
+  await ctx.replyWithAudio("./output.mp3", { caption: "✅ تم إضافة الصدى بنجاح!" });
 });
 
 module.exports = async (req, res) => {
