@@ -1,17 +1,21 @@
-const { Bot } = require("grammy");
-const { execSync } = require("child_process");
+const { Bot, GrammyError, HttpError } = require("grammy");
+const { exec } = require("child_process");
+const fs = require("fs");
+
 const bot = new Bot(process.env.TELEGRAM_TOKEN);
 
-// معالجة الفيديو: دمج الصوت المضاف له صدى مع الفيديو الأصلي
-bot.on("message:video", async (ctx) => {
-  ctx.reply("🎬 جاري المونتاج وإضافة الصدى... لحظات.");
+bot.on("message:audio", async (ctx) => {
   const file = await ctx.getFile();
-  await file.download("./input.mp4");
+  const path = `./input.mp3`;
+  await file.download(path);
 
-  // معالجة الصوت: استخراج الصوت، إضافة صدى (Echo)، ودمجه مع الفيديو
-  execSync('ffmpeg -i input.mp4 -af "aecho=0.8:0.9:500:0.4" output.mp4');
+  ctx.reply("🎚️ جاري إضافة الصدى... لحظات.");
   
-  await ctx.replyWithVideo("./output.mp4", { caption: "✅ تم المونتاج وإضافة الصدى بنجاح! جاهز للنشر." });
+  // إضافة الصدى
+  exec(`ffmpeg -i input.mp3 -af "aecho=0.8:0.9:500:0.4" output.mp3`, (err) => {
+    if (err) return ctx.reply("❌ فشلت المعالجة.");
+    ctx.replyWithAudio("./output.mp3", { caption: "✅ هذا هو الصوت مع الصدى جاهز!" });
+  });
 });
 
 module.exports = async (req, res) => {
