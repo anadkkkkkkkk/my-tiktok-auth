@@ -1,7 +1,10 @@
 {
   "version": 2,
-  "rewrites": [
-    { "source": "/api/callback", "destination": "/api/callback.js" },
-    { "source": "/api/auth", "destination": "/api/callback.js" }
+  "builds": [
+    { "src": "api/*.js", "use": "@vercel/node" }
+  ],
+  "routes": [
+    { "src": "/api/auth", "dest": "api/auth.js" },
+    { "src": "/api/test", "dest": "api/test.js" }
   ]
 }
