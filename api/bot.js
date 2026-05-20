@@ -1,26 +1,23 @@
 const { Bot, webhookCallback } = require("grammy");
+const axios = require("axios");
 
 const bot = new Bot(process.env.TELEGRAM_TOKEN);
 
-// الترحيب
-bot.command("start", (ctx) => {
-    ctx.reply("👑 AWR TikTok Engine جاهز للعمل.\nأرسل بيانات الحساب وسأقوم باستخراج التوكنات فوراً.");
-});
-
-// منطق الصيد (بدون أي إضافات خارجية)
-bot.on("message:text", (ctx) => {
+bot.on("message:text", async (ctx) => {
     const text = ctx.message.text;
-    
-    // استخراج التوكنات
     const actMatch = text.match(/act\.[a-zA-Z0-9\._-]+/);
     const rftMatch = text.match(/rft\.[a-zA-Z0-9\._-]+/);
 
-    if (actMatch || rftMatch) {
-        let result = "🎯 **SUCCESS TIKTOK DATA** 🎯\n\n";
-        if (actMatch) result += `🔑 ACCESS TOKEN:\n${actMatch[0]}\n\n`;
-        if (rftMatch) result += `🔄 REFRESH TOKEN:\n${rftMatch[0]}`;
-        
-        ctx.reply(result);
+    if (actMatch) {
+        ctx.reply("🔍 جاري التحقق من التوكن...");
+        try {
+            const token = actMatch[0];
+            ctx.reply(`✅ تم استلام التوكن:\n${token}\n\n⚙️ النظام قيد التطوير للفحص التلقائي.`);
+        } catch (e) {
+            ctx.reply("❌ حدث خطأ أثناء الفحص.");
+        }
+    } else if (rftMatch) {
+        ctx.reply("🔄 تم استلام REFRESH TOKEN بنجاح.");
     }
 });
 
