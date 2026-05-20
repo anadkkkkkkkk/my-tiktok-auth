@@ -1,0 +1,19 @@
+{
+  "name": "my-tiktok-auth",
+  "version": "1.0.0",
+  "description": "TikTok authentication service with Vercel Analytics",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "tiktok",
+    "auth",
+    "vercel"
+  ],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@vercel/analytics": "^2.0.1"
+  }
+}
