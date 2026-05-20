@@ -19,35 +19,37 @@ module.exports = async (req, res) => {
 
     if (text.startsWith('تجديد ')) {
       const refreshToken = text.split(' ')[1];
-      sendTelegram(chatId, "🔄 جاري الاتصال بتيك توك لتجديد التوكين...");
+      sendTelegram(chatId, "🔄 جاري التجديد...");
       
       const postData = `client_key=${CLIENT_KEY}&client_secret=${CLIENT_SECRET}&grant_type=refresh_token&refresh_token=${refreshToken}`;
-      const options = {
-        hostname: 'open.tiktokapis.com',
-        path: '/v2/oauth/token/',
-        method: 'POST',
-        headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
-      };
-
+      const options = { hostname: 'open.tiktokapis.com', path: '/v2/oauth/token/', method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' } };
       const reqT = https.request(options, (resp) => {
-        let data = '';
-        resp.on('data', (c) => data += c);
+        let d = '';
+        resp.on('data', (c) => d += c);
         resp.on('end', () => {
-          const resJson = JSON.parse(data);
-          if (resJson.access_token) {
-            sendTelegram(chatId, `✅ تم التجديد بنجاح!\n\n🔑 التوكين الجديد:\n${resJson.access_token}\n\n🔄 التوكين المجدد التالي:\n${resJson.refresh_token}`);
-          } else {
-            sendTelegram(chatId, `❌ فشل التجديد: ${resJson.error_description || 'توكين غير صالح'}`);
-          }
+          const resJ = JSON.parse(d);
+          if (resJ.access_token) sendTelegram(chatId, `✅ التوكين الجديد:\n${resJ.access_token}\n\n🔄 الريفرش:\n${resJ.refresh_token}`);
+          else sendTelegram(chatId, "❌ فشل التجديد.");
         });
       });
       reqT.write(postData);
       reqT.end();
-      
-    } else if (text === '/status') {
-      sendTelegram(chatId, "✅ المحرك جاهز وبانتظار أوامرك.");
+    } else if (text.startsWith('معلومات ')) {
+      const accessToken = text.split(' ')[1];
+      const options = { hostname: 'open.tiktokapis.com', path: '/v2/user/info/?fields=display_name,follower_count,following_count,likes_count', method: 'GET', headers: { 'Authorization': `Bearer ${accessToken}` } };
+      https.get(options, (resp) => {
+        let d = '';
+        resp.on('data', (c) => d += c);
+        resp.on('end', () => {
+          const resJ = JSON.parse(d);
+          if (resJ.data) {
+            const user = resJ.data.user;
+            sendTelegram(chatId, `👤 الاسم: ${user.display_name}\n👥 المتابعون: ${user.follower_count}\n👀 المتابعون (Following): ${user.following_count}\n❤️ الإعجابات: ${user.likes_count}`);
+          } else sendTelegram(chatId, "❌ تعذر جلب البيانات. تأكد من صحة التوكين.");
+        });
+      });
     } else {
-      sendTelegram(chatId, "مرحباً! استخدم الأمر التالي لتجديد التوكين:\nتجديد [ضع_التوكين_هنا]");
+      sendTelegram(chatId, "الأوامر:\n1. تجديد [الريفرش_توكين]\n2. معلومات [الاكسس_توكين]");
     }
   }
   res.status(200).send('OK');
