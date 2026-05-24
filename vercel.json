@@ -1,10 +1,12 @@
 {
-  "headers": [
+  "rewrites": [
     {
-      "source": "/tiktokF9OBu0zL35lAg4B93QCkcO6EHVKdN3W0.txt",
-      "headers": [
-        { "key": "Content-Type", "value": "text/plain; charset=utf-8" }
-      ]
+      "source": "/(.*).txt",
+      "destination": "/$1.txt"
+    },
+    {
+      "source": "/(.*)",
+      "destination": "/index.html"
     }
   ]
 }
