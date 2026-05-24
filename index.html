@@ -1,1 +1,83 @@
-<h1>Privacy Policy</h1><p>We respect your privacy and only use TikTok data to provide analytics for your account.</p>
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AWR - تسجيل الدخول عبر تيك توك</title>
+    <style>
+        body {
+            font-family: system-ui, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e, #16213e);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0;
+            color: #fff;
+        }
+        .container {
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(10px);
+            padding: 40px;
+            border-radius: 20px;
+            text-align: center;
+            max-width: 400px;
+            width: 90%;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.4);
+        }
+        h1 { margin-bottom: 10px; font-size: 28px; }
+        p { opacity: 0.85; margin-bottom: 30px; }
+        .tt-btn {
+            background: #fe2c55;
+            color: #fff;
+            border: none;
+            padding: 15px 35px;
+            font-size: 18px;
+            border-radius: 50px;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            transition: 0.3s;
+            font-weight: bold;
+        }
+        .tt-btn:hover { background: #e0244d; transform: translateY(-2px); }
+        .user-info {
+            margin-top: 25px;
+            padding: 15px;
+            background: rgba(0,0,0,0.3);
+            border-radius: 12px;
+            display: none;
+        }
+        .user-info img { width: 60px; height: 60px; border-radius: 50%; }
+        .footer-links { margin-top: 25px; font-size: 13px; opacity: 0.8; }
+        .footer-links a { color: #fff; margin: 0 10px; text-decoration: none; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎵 AWR</h1>
+        <p>سجّل دخولك بسهولة باستخدام حساب تيك توك</p>
+        <button class="tt-btn" onclick="loginWithTikTok()">
+            🔐 تسجيل الدخول عبر تيك توك
+        </button>
+        <div class="user-info" id="userInfo">
+            <img id="avatar" src="https://via.placeholder.com/60" alt="الصورة">
+            <h3 id="username">@user_tiktok</h3>
+            <p>تم تسجيل الدخول بنجاح</p>
+        </div>
+        <div class="footer-links">
+            <a href="/privacy.html">سياسة الخصوصية</a> |
+            <a href="/terms.html">شروط الخدمة</a>
+        </div>
+    </div>
+    <script>
+        function loginWithTikTok() {
+            // محاكاة للفيديو التوضيحي
+            document.getElementById('userInfo').style.display = 'block';
+            document.getElementById('avatar').src = 'https://via.placeholder.com/60';
+            document.getElementById('username').textContent = '@awr_user';
+        }
+    </script>
+</body>
+</html>
