@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AWR - تسجيل الدخول عبر تيك توك</title>
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
             font-family: system-ui, sans-serif;
             background: linear-gradient(135deg, #1a1a2e, #16213e);
@@ -13,6 +12,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
+            margin: 0;
             color: #fff;
         }
         .container {
@@ -62,8 +62,8 @@
             🔐 تسجيل الدخول عبر تيك توك
         </button>
         <div class="user-info" id="userInfo">
-            <img id="avatar" src="" alt="الصورة">
-            <h3 id="username"></h3>
+            <img id="avatar" src="https://via.placeholder.com/60" alt="الصورة">
+            <h3 id="username">@user_tiktok</h3>
             <p>تم تسجيل الدخول بنجاح</p>
         </div>
         <div class="footer-links">
@@ -71,39 +71,13 @@
             <a href="/terms.html">شروط الخدمة</a>
         </div>
     </div>
-
     <script>
-        const CLIENT_KEY = 'awnp8zrsr8je0ukh';
-        const REDIRECT_URI = 'https://my-tiktok-auth-c8gq8ltzy-anadkkkkkkkks-projects.vercel.app/auth/callback';
-
         function loginWithTikTok() {
-            const csrfState = Math.random().toString(36).substring(2);
-            localStorage.setItem('tiktok_csrf_state', csrfState);
-
-            const authUrl = 'https://www.tiktok.com/v2/auth/authorize/' +
-                '?client_key=' + CLIENT_KEY +
-                '&redirect_uri=' + encodeURIComponent(REDIRECT_URI) +
-                '&state=' + csrfState +
-                '&scope=user.info.basic' +
-                '&response_type=code';
-
-            window.location.href = authUrl;
+            // محاكاة للفيديو التوضيحي
+            document.getElementById('userInfo').style.display = 'block';
+            document.getElementById('avatar').src = 'https://via.placeholder.com/60';
+            document.getElementById('username').textContent = '@awr_user';
         }
-
-        window.addEventListener('load', function() {
-            const urlParams = new URLSearchParams(window.location.search);
-            const code = urlParams.get('code');
-            const state = urlParams.get('state');
-            const storedState = localStorage.getItem('tiktok_csrf_state');
-
-            if (code && state && state === storedState) {
-                document.getElementById('userInfo').style.display = 'block';
-                document.getElementById('username').textContent = '@tiktok_user';
-                document.getElementById('avatar').src = 'https://via.placeholder.com/60';
-                localStorage.removeItem('tiktok_csrf_state');
-                window.history.replaceState({}, document.title, window.location.pathname);
-            }
-        });
     </script>
 </body>
 </html>
