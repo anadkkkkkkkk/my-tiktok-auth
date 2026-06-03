@@ -5,78 +5,62 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AWR - تسجيل الدخول عبر تيك توك</title>
     <style>
-        body {
-            font-family: system-ui, sans-serif;
-            background: linear-gradient(135deg, #1a1a2e, #16213e);
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0;
-            color: #fff;
-        }
-        .container {
-            background: rgba(255,255,255,0.1);
-            backdrop-filter: blur(10px);
-            padding: 40px;
-            border-radius: 20px;
-            text-align: center;
-            max-width: 400px;
-            width: 90%;
-            box-shadow: 0 25px 50px rgba(0,0,0,0.4);
-        }
-        h1 { margin-bottom: 10px; font-size: 28px; }
-        p { opacity: 0.85; margin-bottom: 30px; }
-        .tt-btn {
-            background: #fe2c55;
-            color: #fff;
-            border: none;
-            padding: 15px 35px;
-            font-size: 18px;
-            border-radius: 50px;
-            cursor: pointer;
-            display: inline-flex;
-            align-items: center;
-            gap: 10px;
-            transition: 0.3s;
-            font-weight: bold;
-        }
-        .tt-btn:hover { background: #e0244d; transform: translateY(-2px); }
-        .user-info {
-            margin-top: 25px;
-            padding: 15px;
-            background: rgba(0,0,0,0.3);
-            border-radius: 12px;
-            display: none;
-        }
-        .user-info img { width: 60px; height: 60px; border-radius: 50%; }
-        .footer-links { margin-top: 25px; font-size: 13px; opacity: 0.8; }
-        .footer-links a { color: #fff; margin: 0 10px; text-decoration: none; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, sans-serif; }
+        body { background: linear-gradient(135deg, #000000, #1a1a2e); min-height: 100vh; display: flex; align-items: center; justify-content: center; }
+        .card { background: #161622; border-radius: 24px; padding: 40px; width: 400px; max-width: 90%; text-align: center; box-shadow: 0 20px 60px rgba(0,0,0,0.5); border: 1px solid #2a2a3e; }
+        h1 { font-size: 2.5em; font-weight: 700; background: linear-gradient(90deg, #25F4EE, #FE2C55); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 8px; }
+        .subtitle { color: #888; margin-bottom: 30px; font-size: 0.95em; }
+        .tiktok-btn { display: inline-flex; align-items: center; gap: 12px; background: #161622; color: #fff; border: 2px solid #2a2a3e; padding: 14px 32px; border-radius: 50px; font-size: 1.1em; font-weight: 600; cursor: pointer; transition: all 0.3s ease; text-decoration: none; }
+        .tiktok-btn:hover { border-color: #FE2C55; transform: translateY(-2px); box-shadow: 0 8px 25px rgba(254,44,85,0.3); }
+        .tiktok-btn svg { width: 24px; height: 24px; }
+        .user-card { display: none; margin-top: 20px; padding: 20px; background: #1e1e32; border-radius: 16px; border: 1px solid #2a2a3e; }
+        .user-card img { width: 64px; height: 64px; border-radius: 50%; border: 3px solid #25F4EE; margin-bottom: 10px; }
+        .user-card .name { color: #fff; font-size: 1.2em; font-weight: 600; }
+        .user-card .handle { color: #888; font-size: 0.9em; }
+        .user-card .success { color: #25F4EE; margin-top: 10px; font-size: 0.9em; }
+        .footer { margin-top: 25px; color: #555; font-size: 0.8em; }
+        .footer a { color: #666; text-decoration: none; }
+        .footer a:hover { color: #25F4EE; }
+        .error-msg { display: none; margin-top: 15px; padding: 12px; background: rgba(254,44,85,0.1); border: 1px solid #FE2C55; border-radius: 12px; color: #FE2C55; font-size: 0.9em; }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>🎵 AWR</h1>
-        <p>سجّل دخولك بسهولة باستخدام حساب تيك توك</p>
-        <button class="tt-btn" onclick="loginWithTikTok()">
+    <div class="card">
+        <h1>AWR</h1>
+        <p class="subtitle">سجّل دخولك بسهولة باستخدام حساب تيك توك</p>
+        <a href="/auth/login" class="tiktok-btn" id="loginBtn">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M20 2H4a2 2 0 00-2 2v12a2 2 0 002 2h4l4 4 4-4h4a2 2 0 002-2V4a2 2 0 00-2-2z"/>
+                <path d="M12 6v8M8 10h8"/>
+            </svg>
             🔐 تسجيل الدخول عبر تيك توك
-        </button>
-        <div class="user-info" id="userInfo">
-            <img id="avatar" src="https://via.placeholder.com/60" alt="الصورة">
-            <h3 id="username">@user_tiktok</h3>
-            <p>تم تسجيل الدخول بنجاح</p>
+        </a>
+        <div class="user-card" id="userCard">
+            <img id="userAvatar" src="" alt="الصورة">
+            <div class="name" id="userName"></div>
+            <div class="handle" id="userHandle"></div>
+            <div class="success">✅ تم تسجيل الدخول بنجاح</div>
         </div>
-        <div class="footer-links">
-            <a href="/privacy.html">سياسة الخصوصية</a> |
+        <div class="error-msg" id="errorMsg"></div>
+        <div class="footer">
+            <a href="/privacy.html">سياسة الخصوصية</a> ·
             <a href="/terms.html">شروط الخدمة</a>
         </div>
     </div>
     <script>
-        function loginWithTikTok() {
-            // محاكاة للفيديو التوضيحي
-            document.getElementById('userInfo').style.display = 'block';
-            document.getElementById('avatar').src = 'https://via.placeholder.com/60';
-            document.getElementById('username').textContent = '@awr_user';
+        const params = new URLSearchParams(window.location.search);
+        if (params.get('success') === 'true') {
+            document.getElementById('loginBtn').style.display = 'none';
+            document.getElementById('userCard').style.display = 'block';
+            document.getElementById('userName').textContent = params.get('name') || 'مستخدم';
+            document.getElementById('userHandle').textContent = '@' + (params.get('handle') || 'user');
+            document.getElementById('userAvatar').src = params.get('avatar') || 'https://via.placeholder.com/64';
+            window.history.replaceState({}, document.title, '/');
+        }
+        if (params.get('error')) {
+            document.getElementById('errorMsg').style.display = 'block';
+            document.getElementById('errorMsg').textContent = '❌ ' + decodeURIComponent(params.get('error'));
+            window.history.replaceState({}, document.title, '/');
         }
     </script>
 </body>
