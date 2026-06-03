@@ -3,65 +3,135 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AWR - تسجيل الدخول عبر تيك توك</title>
+    <title>AWR TikTok Auth Bot</title>
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, sans-serif; }
-        body { background: linear-gradient(135deg, #000000, #1a1a2e); min-height: 100vh; display: flex; align-items: center; justify-content: center; }
-        .card { background: #161622; border-radius: 24px; padding: 40px; width: 400px; max-width: 90%; text-align: center; box-shadow: 0 20px 60px rgba(0,0,0,0.5); border: 1px solid #2a2a3e; }
-        h1 { font-size: 2.5em; font-weight: 700; background: linear-gradient(90deg, #25F4EE, #FE2C55); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 8px; }
-        .subtitle { color: #888; margin-bottom: 30px; font-size: 0.95em; }
-        .tiktok-btn { display: inline-flex; align-items: center; gap: 12px; background: #161622; color: #fff; border: 2px solid #2a2a3e; padding: 14px 32px; border-radius: 50px; font-size: 1.1em; font-weight: 600; cursor: pointer; transition: all 0.3s ease; text-decoration: none; }
-        .tiktok-btn:hover { border-color: #FE2C55; transform: translateY(-2px); box-shadow: 0 8px 25px rgba(254,44,85,0.3); }
-        .tiktok-btn svg { width: 24px; height: 24px; }
-        .user-card { display: none; margin-top: 20px; padding: 20px; background: #1e1e32; border-radius: 16px; border: 1px solid #2a2a3e; }
-        .user-card img { width: 64px; height: 64px; border-radius: 50%; border: 3px solid #25F4EE; margin-bottom: 10px; }
-        .user-card .name { color: #fff; font-size: 1.2em; font-weight: 600; }
-        .user-card .handle { color: #888; font-size: 0.9em; }
-        .user-card .success { color: #25F4EE; margin-top: 10px; font-size: 0.9em; }
-        .footer { margin-top: 25px; color: #555; font-size: 0.8em; }
-        .footer a { color: #666; text-decoration: none; }
-        .footer a:hover { color: #25F4EE; }
-        .error-msg { display: none; margin-top: 15px; padding: 12px; background: rgba(254,44,85,0.1); border: 1px solid #FE2C55; border-radius: 12px; color: #FE2C55; font-size: 0.9em; }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background: linear-gradient(135deg, #0f0f23 0%, #1a1a2e 100%);
+            color: #e0e0e0;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 2rem;
+        }
+        .container { max-width: 900px; width: 100%; }
+        .header {
+            text-align: center;
+            padding: 2rem 0;
+            border-bottom: 1px solid #333;
+            margin-bottom: 2rem;
+        }
+        .header h1 {
+            font-size: 2.5rem;
+            background: linear-gradient(90deg, #00f5d4, #ff0054);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .header p { color: #888; margin-top: 0.5rem; }
+        .card {
+            background: rgba(255,255,255,0.05);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 16px;
+            padding: 2rem;
+            margin-bottom: 1.5rem;
+            transition: transform 0.2s;
+        }
+        .card:hover { transform: translateY(-2px); }
+        .btn {
+            display: inline-block;
+            padding: 1rem 2rem;
+            border-radius: 12px;
+            border: none;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+        }
+        .btn-primary {
+            background: linear-gradient(135deg, #ff0054, #ff6b35);
+            color: white;
+            box-shadow: 0 4px 15px rgba(255,0,84,0.3);
+        }
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(255,0,84,0.5);
+        }
+        .btn-danger { background: #dc3545; color: white; }
+        .btn-danger:hover { background: #c82333; }
+        .user-card {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem;
+            background: rgba(255,255,255,0.03);
+            border-radius: 12px;
+            margin-bottom: 0.75rem;
+        }
+        .user-card img { width: 48px; height: 48px; border-radius: 50%; border: 2px solid #00f5d4; }
+        .user-info { flex: 1; }
+        .user-info strong { display: block; font-size: 1.1rem; }
+        .user-info span { color: #888; font-size: 0.9rem; }
+        .badge { display: inline-block; padding: 0.25rem 0.75rem; border-radius: 20px; font-size: 0.8rem; }
+        .badge-ok { background: rgba(0,245,212,0.15); color: #00f5d4; border: 1px solid #00f5d4; }
+        .badge-expiring { background: rgba(255,107,53,0.15); color: #ff6b35; border: 1px solid #ff6b35; }
+        .badge-expired { background: rgba(220,53,69,0.15); color: #dc3545; border: 1px solid #dc3545; }
+        .empty-state { text-align: center; padding: 3rem; color: #666; }
+        .empty-state .icon { font-size: 4rem; margin-bottom: 1rem; }
+        .toast { position: fixed; bottom: 2rem; right: 2rem; padding: 1rem 1.5rem; border-radius: 12px; color: white; animation: slideIn 0.3s ease; z-index: 1000; }
+        .toast-success { background: #00f5d4; color: #000; }
+        .toast-error { background: #dc3545; color: #fff; }
+        @keyframes slideIn { from { transform: translateY(100px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+        .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 1rem; margin-bottom: 1.5rem; }
+        .stat-card { background: rgba(255,255,255,0.05); border-radius: 12px; padding: 1rem; text-align: center; border: 1px solid rgba(255,255,255,0.1); }
+        .stat-card .num { font-size: 2rem; font-weight: 700; color: #00f5d4; }
+        .stat-card .label { font-size: 0.85rem; color: #888; margin-top: 0.25rem; }
+        .action-bar { display: flex; gap: 1rem; align-items: center; flex-wrap: wrap; }
     </style>
 </head>
 <body>
-    <div class="card">
-        <h1>AWR</h1>
-        <p class="subtitle">سجّل دخولك بسهولة باستخدام حساب تيك توك</p>
-        <a href="/auth/login" class="tiktok-btn" id="loginBtn">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M20 2H4a2 2 0 00-2 2v12a2 2 0 002 2h4l4 4 4-4h4a2 2 0 002-2V4a2 2 0 00-2-2z"/>
-                <path d="M12 6v8M8 10h8"/>
-            </svg>
-            🔐 تسجيل الدخول عبر تيك توك
-        </a>
-        <div class="user-card" id="userCard">
-            <img id="userAvatar" src="" alt="الصورة">
-            <div class="name" id="userName"></div>
-            <div class="handle" id="userHandle"></div>
-            <div class="success">✅ تم تسجيل الدخول بنجاح</div>
+    <div class="container">
+        <div class="header">
+            <h1>🤖 AWR TikTok Auth Bot</h1>
+            <p>نظام توثيق OAuth v2 آلي بالكامل — مع تجديد التوكنات تلقائياً</p>
         </div>
-        <div class="error-msg" id="errorMsg"></div>
-        <div class="footer">
-            <a href="/privacy.html">سياسة الخصوصية</a> ·
-            <a href="/terms.html">شروط الخدمة</a>
+        <div class="stats" id="stats"></div>
+        <div class="card">
+            <div class="action-bar">
+                <a href="/auth/login" class="btn btn-primary">➕ إضافة مستخدم جديد</a>
+                <span style="color:#888;font-size:0.9rem;">🟢 سيتم تجديد التوكنات تلقائياً</span>
+            </div>
+        </div>
+        <div class="card">
+            <h2 style="margin-bottom:1rem;">👥 المستخدمون المسجلون</h2>
+            <div id="users-list">
+                <div class="empty-state">
+                    <div class="icon">📭</div>
+                    <p>لا يوجد مستخدمون بعد</p>
+                    <p style="font-size:0.85rem;margin-top:0.5rem;">اضغط "إضافة مستخدم جديد" للبدء</p>
+                </div>
+            </div>
         </div>
     </div>
     <script>
-        const params = new URLSearchParams(window.location.search);
-        if (params.get('success') === 'true') {
-            document.getElementById('loginBtn').style.display = 'none';
-            document.getElementById('userCard').style.display = 'block';
-            document.getElementById('userName').textContent = params.get('name') || 'مستخدم';
-            document.getElementById('userHandle').textContent = '@' + (params.get('handle') || 'user');
-            document.getElementById('userAvatar').src = params.get('avatar') || 'https://via.placeholder.com/64';
-            window.history.replaceState({}, document.title, '/');
-        }
-        if (params.get('error')) {
-            document.getElementById('errorMsg').style.display = 'block';
-            document.getElementById('errorMsg').textContent = '❌ ' + decodeURIComponent(params.get('error'));
-            window.history.replaceState({}, document.title, '/');
-        }
+        const API_BASE = '/api';
+        function showToast(m,t='success'){const e=document.createElement('div');e.className=`toast toast-${t}`;e.textContent=m;document.body.appendChild(e);setTimeout(()=>e.remove(),4000);}
+        async function loadUsers(){try{const r=await fetch(`${API_BASE}/users`);const u=await r.json();renderUsers(u);renderStats(u);}catch(e){showToast('فشل تحميل المستخدمين','error');}}
+        function renderStats(u){const n=Date.now();document.getElementById('stats').innerHTML=`
+            <div class="stat-card"><div class="num">${u.length}</div><div class="label">إجمالي المستخدمين</div></div>
+            <div class="stat-card"><div class="num">${u.filter(x=>x.expires_at&&n<x.expires_at).length}</div><div class="label">نشط</div></div>
+            <div class="stat-card"><div class="num">${u.filter(x=>x.expires_at&&n>x.expires_at-3600000&&n<x.expires_at).length}</div><div class="label">سينتهي قريباً</div></div>
+            <div class="stat-card"><div class="num">${u.filter(x=>!x.expires_at||n>x.expires_at).length}</div><div class="label">منتهي</div></div>`;}
+        function renderUsers(u){const c=document.getElementById('users-list');if(!u.length){c.innerHTML=`<div class="empty-state"><div class="icon">📭</div><p>لا يوجد مستخدمون بعد</p></div>`;return;}
+        const n=Date.now();c.innerHTML=u.map(x=>{let b='<span class="badge badge-ok">✅ نشط</span>',t='';if(x.expires_at){const r=x.expires_at-n;if(r<0){b='<span class="badge badge-expired">❌ منتهي</span>';t='منتهي';}else if(r<3600000){b='<span class="badge badge-expiring">⚠️ قريباً</span>';t=`خلال ${Math.floor(r/60000)} د`;}else if(r<86400000){t=`خلال ${Math.floor(r/3600000)} س`;}else{t=`خلال ${Math.floor(r/86400000)} ي`;}}
+        return `<div class="user-card"><img src="${x.avatar_url||'https://via.placeholder.com/48'}" onerror="this.src='https://via.placeholder.com/48'"><div class="user-info"><strong>${x.display_name||'مستخدم'}</strong><span>@${x.username||'?'}</span></div><div style="text-align:left"><div>${b}</div><div style="font-size:0.8rem;color:#888">${t}</div></div><button class="btn btn-danger" onclick="deleteUser('${x.id}')" style="padding:0.5rem 1rem;font-size:0.85rem">حذف</button></div>`;}).join('');}
+        async function deleteUser(id){if(!confirm('حذف؟'))return;try{const r=await fetch(`${API_BASE}/users/${id}`,{method:'DELETE'});if(r.ok){showToast('تم الحذف');loadUsers();}else showToast('فشل','error');}catch(e){showToast('فشل','error');}}
+        const p=new URLSearchParams(window.location.search);if(p.get('success')==='true'){showToast(`✅ ${p.get('name')} (@${p.get('handle')})`);window.history.replaceState({},document.title,'/');}else if(p.get('error')){showToast(`❌ ${p.get('error')}`,'error');window.history.replaceState({},document.title,'/');}
+        loadUsers();setInterval(loadUsers,30000);
     </script>
 </body>
 </html>

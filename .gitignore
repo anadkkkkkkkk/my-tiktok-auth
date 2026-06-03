@@ -1,6 +1,2 @@
-.env
-.env.*
-vercel_token.txt
 node_modules/
-.vercel/
-.DS_Store
+.env
